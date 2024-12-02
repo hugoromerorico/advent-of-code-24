@@ -11,8 +11,18 @@
 		rm -rf $@ && \
 		mkdir -p $@ && \
 		cd $@ && \
-		curl -s https://adventofcode.com/2024/day/$@ | awk '/<main>/{flag=1;next}/<\/main>/{flag=0}flag' | sed 's/<[^>]*>//g' > problem.md && \
-		curl -s --cookie "session=$$(cat ../.env | grep COOKIE | cut -d '=' -f2)" https://adventofcode.com/2024/day/$@/input > in.txt && \
+		for i in {1..5}; do \
+			curl -s https://adventofcode.com/2024/day/$@ | awk '/<main>/{flag=1;next}/<\/main>/{flag=0}flag' | sed 's/<[^>]*>//g' > problem.md; \
+			if ! grep -q "Internal Server Error" problem.md && [ -s problem.md ]; then break; \
+			else echo "Retrying problem.md download ($$i/5)..."; sleep 2; fi; \
+			if [ $$i -eq 5 ]; then echo "Failed to download problem.md after 5 attempts"; exit 1; fi; \
+		done && \
+		for i in {1..5}; do \
+			curl -s --cookie "session=$$(cat ../.env | grep COOKIE | cut -d '=' -f2)" https://adventofcode.com/2024/day/$@/input > in.txt; \
+			if ! grep -q "Internal Server Error" in.txt && [ -s in.txt ]; then break; \
+			else echo "Retrying input download ($$i/5)..."; sleep 2; fi; \
+			if [ $$i -eq 5 ]; then echo "Failed to download input after 5 attempts"; exit 1; fi; \
+		done && \
 		cd .. && python3 claude.py $@ && cd $@ && python3 exec.py; \
 	fi
 
