@@ -33,6 +33,11 @@
 	rm -rf $@ && \
 	mkdir -p $@ && \
 	cd $@ && \
-	curl -s --cookie "session=$$(cat ../.env | grep COOKIE | cut -d '=' -f2)" https://adventofcode.com/2024/day/$(NUM) | awk '/<main>/{flag=1;next}/<\/main>/{flag=0}flag' | sed 's/<[^>]*>//g' > problem.md && \
+	for i in {1..5}; do \
+		curl -s --cookie "session=$$(cat ../.env | grep COOKIE | cut -d '=' -f2)" https://adventofcode.com/2024/day/$(NUM) | awk '/<main>/{flag=1;next}/<\/main>/{flag=0}flag' | sed 's/<[^>]*>//g' > problem.md; \
+		if ! grep -q "Internal Server Error" problem.md && [ -s problem.md ]; then break; \
+		else echo "Retrying problem.md download ($$i/5)..."; sleep 2; fi; \
+		if [ $$i -eq 5 ]; then echo "Failed to download problem.md after 5 attempts"; exit 1; fi; \
+	done && \
 	cp ../$(NUM)/in.txt . && \
 	cd .. && python3 claude_part2.py $@ && cd $@ && python3 exec.py
