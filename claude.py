@@ -63,6 +63,12 @@ def save_response(problem_number, code):
 
 def process_problem(problem_number):
     prompt = get_formatted_prompt(problem_number)
+    
+    # Save prompt to file
+    os.makedirs(str(problem_number), exist_ok=True)
+    with open(f'{problem_number}/to_claude.txt', 'w') as file:
+        file.write(prompt)
+        
     response = get_claude_response(prompt)
     save_response(problem_number, response)
 
