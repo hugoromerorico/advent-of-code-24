@@ -6,13 +6,13 @@ enabled = True
 i = 0
 while i < len(data):
     # Handle do() instruction
-    if data[i:i+3] == "do(" and data[i+3] == ")":
+    if data[i:i+4] == "do()":
         enabled = True
         i += 4
         continue
         
     # Handle don't() instruction    
-    if data[i:i+6] == "don't(" and data[i+6] == ")":
+    if data[i:i+7] == "don't()":
         enabled = False
         i += 7
         continue
