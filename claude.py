@@ -21,12 +21,30 @@ def get_formatted_prompt(problem_number):
     with open(f'{problem_number}/problem.md', 'r') as file:
         problem_content = file.read()
     
+    # Read the input file
+    with open(f'{problem_number}/in.txt', 'r') as file:
+        input_content = file.read()
+    
+    # If input is too long, truncate it
+    if len(input_content) > 500:
+        start = input_content[:200]
+        end = input_content[-200:]
+        input_content = f"""
+{start}
+
+[... truncated due to length ...]
+
+{end}"""
+    
     # Remove authentication section
     auth_section = "To play, please identify yourself via"
     problem_description = problem_content.split(auth_section)[0].strip()
     
-    # Format the system prompt with the problem
-    formatted_prompt = system_prompt.format(problem=problem_description)
+    # Format the system prompt with both problem and input
+    formatted_prompt = system_prompt.format(
+        problem=problem_description,
+        input=input_content
+    )
     
     return formatted_prompt
 

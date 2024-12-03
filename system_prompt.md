@@ -55,3 +55,9 @@ Solve the next problem:
 
 The input file is located in "in.txt" with the content as shown in the example. Bear in mind you will need to read it and parse it properly.
 ```
+
+Here is the input file, or a part of it:
+```
+{input}
+```
+
