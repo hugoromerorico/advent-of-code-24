@@ -41,3 +41,17 @@
 	done && \
 	cp ../$(NUM)/in.txt . && \
 	cd .. && python3 claude_part2.py $@ && cd $@ && python3 exec.py
+
+# Retry targets for both part 1 and part 2
+retry_%:
+	@cd "/Users/hugoromero/Documents/GitHub/advent-of-code-24" && \
+	python retry.py $* $(filter-out $@,$(MAKECMDGOALS)) && \
+	cd $* && \
+	python exec.py && \
+	cd ..
+
+# Helper target to handle the wrong_output argument
+%:
+	@:
+
+.SILENT: retry_%
