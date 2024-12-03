@@ -13,38 +13,56 @@ PROJECT_ID = os.getenv('PROJECT_ID')
 client = AnthropicVertex(region=LOCATION, project_id=PROJECT_ID)
 
 def get_formatted_prompt(problem_number):
-    # Extract base problem number and determine if it's part 2
-    is_part2 = False
-    base_number = problem_number
-    if str(problem_number).endswith('_2'):
-        is_part2 = True
-        base_number = problem_number.split('_')[0]
+    # Remove _2 suffix if present
+    base_number = problem_number.split('_')[0]
     
-    # Read the appropriate system prompt template
-    system_prompt_file = 'system_prompt_part2.md' if is_part2 else 'system_prompt.md'
-    with open(system_prompt_file, 'r') as file:
+    # Read the system prompt template
+    with open('system_prompt_part2.md', 'r') as file:
         system_prompt = file.read()
     
-    # Read the specific problem file
-    problem_path = f'{base_number}/problem.md' if not is_part2 else f'{base_number}_2/problem.md'
-    with open(problem_path, 'r') as file:
+    # Read the problem file
+    with open(f'{base_number}_2/problem.md', 'r') as file:
         problem_content = file.read()
     
-    # Remove authentication section and completed message
-    auth_section = "To play, please identify yourself via"
-    complete_section = "Both parts of this puzzle are complete!"
+    # Read the input file
+    with open(f'{base_number}_2/in.txt', 'r') as file:
+        input_content = file.read()
     
-    problem_description = problem_content.split(auth_section)[0].strip()
-    if complete_section in problem_description:
-        # Find the start of the line containing the complete_section
-        lines = problem_description.split('\n')
-        for i, line in enumerate(lines):
-            if complete_section in line:
-                problem_description = '\n'.join(lines[:i]).strip()
-                break
+    # If input is too long, truncate it
+    if len(input_content) > 500:
+        start = input_content[:200]
+        end = input_content[-200:]
+        input_content = f"""
+{start}
+
+[... truncated due to length ...]
+
+{end}"""
     
-    # Format the system prompt with the problem
-    formatted_prompt = system_prompt.replace("{problem}", problem_description)
+    # Remove authentication, completed, and sharing sections
+    sections_to_remove = [
+        "To play, please identify yourself via",
+        "Both parts of this puzzle are complete!",
+        "You can also [Share"
+    ]
+    
+    for section in sections_to_remove:
+        if section in problem_content:
+            problem_description = problem_content.split(section)[0].strip()
+        else:
+            problem_description = problem_content.strip()
+    
+    # Escape any literal curly braces in the system prompt by doubling them
+    system_prompt = system_prompt.replace('{', '{{').replace('}', '}}')
+    
+    # Restore our named placeholders
+    system_prompt = system_prompt.replace('{{problem}}', '{problem}').replace('{{input}}', '{input}')
+    
+    # Format the system prompt with problem and input using named placeholders
+    formatted_prompt = system_prompt.format(
+        problem=problem_description,
+        input=input_content
+    )
     
     return formatted_prompt
 
@@ -55,7 +73,7 @@ def save_response(problem_number, code):
         cleaned_code = code[len('```python\n'):-3].strip()
     
     # Ensure directory exists
-    folder = str(problem_number)
+    folder = f"{problem_number.split('_')[0]}_2"
     os.makedirs(folder, exist_ok=True)
     
     # Save the cleaned code to exec.py
@@ -66,7 +84,8 @@ def process_problem(problem_number):
     prompt = get_formatted_prompt(problem_number)
     
     # Save prompt to file
-    with open(f'{problem_number}/to_claude.txt', 'w') as file:
+    folder = f"{problem_number.split('_')[0]}_2"
+    with open(f'{folder}/to_claude.txt', 'w') as file:
         file.write(prompt)
         
     response = get_claude_response(prompt)
@@ -75,30 +94,20 @@ def process_problem(problem_number):
 def get_claude_response(prompt, max_tokens=8000):
     response = client.messages.create(
         max_tokens=max_tokens,
-        messages=[
-            {
-                "role": "user",
-                "content": prompt,
-            }
-        ],
+        messages=[{"role": "user", "content": prompt}],
         model="claude-3-5-sonnet-v2@20241022",
     )
     return response.content[0].text
 
-# Example usage
 if __name__ == "__main__":
     if len(sys.argv) != 2:
-        print("Usage: python claude.py <problem_number> or <problem_number_2>")
-        print("Example: python claude.py 1    # for part 1")
-        print("Example: python claude.py 1_2  # for part 2")
+        print("Usage: python claude_part2.py <problem_number>")
+        print("Example: python claude_part2.py 1_2")
         sys.exit(1)
     
     try:
         problem_number = sys.argv[1]
         process_problem(problem_number)
-    except ValueError:
-        print("Error: Invalid problem number format")
-        sys.exit(1)
     except FileNotFoundError as e:
         print(f"Error: {e}")
         sys.exit(1)
