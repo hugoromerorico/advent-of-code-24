@@ -1,0 +1,256 @@
+You are a senior Python programmer specializing in algorithmic problem-solving. Your task is to provide a clean, efficient, and correct Python solution that directly solves the given problem. Your response should:
+
+1. Contain only the Python code solution
+2. Focus on performance and readability
+3. Handle input parsing from "in.txt"
+4. Print only the final answer
+
+Example of a good solution format, given the problem:
+```
+--- Day 1: Historian Hysteria ---The Chief Historian is always present for the big Christmas sleigh launch, but nobody has seen him in months! Last anyone heard, he was visiting locations that are historically significant to the North Pole; a group of Senior Historians has asked you to accompany them as they check the places they think he was most likely to visit.
+As each location is checked, they will mark it on their list with a star. They figure the Chief Historian must be in one of the first fifty places they'll look, so in order to save Christmas, you need to help them get fifty stars on their list before Santa takes off on December 25th.
+Collect stars by solving puzzles.  Two puzzles will be made available on each day in the Advent calendar; the second puzzle is unlocked when you complete the first.  Each puzzle grants one star. Good luck!
+You haven't even left yet and the group of Elvish Senior Historians has already hit a problem: their list of locations to check is currently empty. Eventually, someone decides that the best place to check first would be the Chief Historian's office.
+Upon pouring into the office, everyone confirms that the Chief Historian is indeed nowhere to be found. Instead, the Elves discover an assortment of notes and lists of historically significant locations! This seems to be the planning the Chief Historian was doing before he left. Perhaps these notes can be used to determine which locations to search?
+Throughout the Chief's office, the historically significant locations are listed not by name but by a unique number called the location ID. To make sure they don't miss anything, The Historians split into two groups, each searching the office and trying to create their own complete list of location IDs.
+There's just one problem: by holding the two lists up side by side (your puzzle input), it quickly becomes clear that the lists aren't very similar. Maybe you can help The Historians reconcile their lists?
+For example:
+3   4
+4   3
+2   5
+1   3
+3   9
+3   3
+
+Maybe the lists are only off by a small amount! To find out, pair up the numbers and measure how far apart they are. Pair up the smallest number in the left list with the smallest number in the right list, then the second-smallest left number with the second-smallest right number, and so on.
+Within each pair, figure out how far apart the two numbers are; you'll need to add up all of those distances. For example, if you pair up a 3 from the left list with a 7 from the right list, the distance apart is 4; if you pair up a 9 with a 3, the distance apart is 6.
+In the example list above, the pairs and distances would be as follows:
+
+The smallest number in the left list is 1, and the smallest number in the right list is 3. The distance between them is 2.
+The second-smallest number in the left list is 2, and the second-smallest number in the right list is another 3. The distance between them is 1.
+The third-smallest number in both lists is 3, so the distance between them is 0.
+The next numbers to pair up are 3 and 4, a distance of 1.
+The fifth-smallest numbers in each list are 3 and 5, a distance of 2.
+Finally, the largest number in the left list is 4, while the largest number in the right list is 9; these are a distance 5 apart.
+
+To find the total distance between the left list and the right list, add up the squares of the distances between all of the pairs you found if the distance is even, otherwise subtract the distance without squaring it. In the example above, this is 4 - 1 + 0 - 1 + 4 - 5 = 1.
+Your actual left and right lists contain many location IDs. What is the total distance between your lists?
+
+The input file is located in "in.txt" with the content as shown in the example. Bear in mind you will need to read it and parse it properly.
+```
+A valid answer would be:
+```
+data = [line.strip() for line in open("in.txt").readlines()]
+
+arr1 = sorted([d.split()[0] for d in data])
+arr2 = sorted([d.split()[1] for d in data])
+
+total = 0
+for a, b in zip(arr1, arr2):
+    diff = abs(int(a) - int(b))
+    if diff % 2 == 0:
+        total += diff * diff
+    else:
+        total -= diff
+
+print(total)
+```
+You already have solved the first part of the problem, now solve the second part. For example, if the problem is:
+```
+--- Day 1: Historian Hysteria ---The Chief Historian is always present for the big Christmas sleigh launch, but nobody has seen him in months! Last anyone heard, he was visiting locations that are historically significant to the North Pole; a group of Senior Historians has asked you to accompany them as they check the places they think he was most likely to visit.
+As each location is checked, they will mark it on their list with a star. They figure the Chief Historian must be in one of the first fifty places they'll look, so in order to save Christmas, you need to help them get fifty stars on their list before Santa takes off on December 25th.
+Collect stars by solving puzzles.  Two puzzles will be made available on each day in the Advent calendar; the second puzzle is unlocked when you complete the first.  Each puzzle grants one star. Good luck!
+You haven't even left yet and the group of Elvish Senior Historians has already hit a problem: their list of locations to check is currently empty. Eventually, someone decides that the best place to check first would be the Chief Historian's office.
+Upon pouring into the office, everyone confirms that the Chief Historian is indeed nowhere to be found. Instead, the Elves discover an assortment of notes and lists of historically significant locations! This seems to be the planning the Chief Historian was doing before he left. Perhaps these notes can be used to determine which locations to search?
+Throughout the Chief's office, the historically significant locations are listed not by name but by a unique number called the location ID. To make sure they don't miss anything, The Historians split into two groups, each searching the office and trying to create their own complete list of location IDs.
+There's just one problem: by holding the two lists up side by side (your puzzle input), it quickly becomes clear that the lists aren't very similar. Maybe you can help The Historians reconcile their lists?
+For example:
+3   4
+4   3
+2   5
+1   3
+3   9
+3   3
+
+Maybe the lists are only off by a small amount! To find out, pair up the numbers and measure how far apart they are. Pair up the smallest number in the left list with the smallest number in the right list, then the second-smallest left number with the second-smallest right number, and so on.
+Within each pair, figure out how far apart the two numbers are; you'll need to add up all of those distances. For example, if you pair up a 3 from the left list with a 7 from the right list, the distance apart is 4; if you pair up a 9 with a 3, the distance apart is 6.
+In the example list above, the pairs and distances would be as follows:
+
+The smallest number in the left list is 1, and the smallest number in the right list is 3. The distance between them is 2.
+The second-smallest number in the left list is 2, and the second-smallest number in the right list is another 3. The distance between them is 1.
+The third-smallest number in both lists is 3, so the distance between them is 0.
+The next numbers to pair up are 3 and 4, a distance of 1.
+The fifth-smallest numbers in each list are 3 and 5, a distance of 2.
+Finally, the largest number in the left list is 4, while the largest number in the right list is 9; these are a distance 5 apart.
+
+To find the total distance between the left list and the right list, add up the distances between all of the pairs you found. In the example above, this is 2 + 1 + 0 + 1 + 2 + 5, a total distance of 11!
+Your actual left and right lists contain many location IDs. What is the total distance between your lists?
+
+Your puzzle answer was 2196996.--- Part Two ---Your analysis only confirmed what everyone feared: the two lists of location IDs are indeed very different.
+Or are they?
+The Historians can't agree on which group made the mistakes or how to read most of the Chief's handwriting, but in the commotion you notice an interesting detail: a lot of location IDs appear in both lists! Maybe the other numbers aren't location IDs at all but rather misinterpreted handwriting.
+This time, you'll need to figure out exactly how often each number from the left list appears in the right list. Calculate a total similarity score by adding up each number in the left list after multiplying it by the number of times that number appears in the right list.
+Here are the same example lists again:
+3   4
+4   3
+2   5
+1   3
+3   9
+3   3
+
+For these example lists, here is the process of finding the similarity score:
+
+The first number in the left list is 3. It appears in the right list three times, so the similarity score increases by 3 * 3 = 9.
+The second number in the left list is 4. It appears in the right list once, so the similarity score increases by 4 * 1 = 4.
+The third number in the left list is 2. It does not appear in the right list, so the similarity score does not increase (2 * 0 = 0).
+The fourth number, 1, also does not appear in the right list.
+The fifth number, 3, appears in the right list three times; the similarity score increases by 9.
+The last number, 3, appears in the right list three times; the similarity score again increases by 9.
+
+So, for these example lists, the similarity score at the end of this process is 31 (9 + 4 + 0 + 0 + 9 + 9).
+Once again consider your left and right lists. What is their similarity score?
+
+The input file is located in "in.txt" with the content as shown in the example. Bear in mind you will need to read it and parse it properly.
+```
+A valid answer would be:
+```
+data = [line.strip() for line in open("in1.txt").readlines()]
+
+arr1 = [int(d.split()[0]) for d in data]
+dic2 = {}
+for d in [int(d.split()[1]) for d in data]:
+    dic2[d] = dic2.get(d, 0) + 1
+
+sim = sum([d1 * dic2.get(d1, 0) for d1 in arr1])
+
+print(sim)
+```
+
+Solve the next problem, bear in mind first part of the problem is already solved, so you only need to solve the second part:
+```
+--- Day 5: Print Queue ---Satisfied with their search on Ceres, the squadron of scholars suggests subsequently scanning the stationery stacks of sub-basement 17.
+The North Pole printing department is busier than ever this close to Christmas, and while The Historians continue their search of this historically significant facility, an Elf operating a very familiar printer beckons you over.
+The Elf must recognize you, because they waste no time explaining that the new sleigh launch safety manual updates won't print correctly. Failure to update the safety manuals would be dire indeed, so you offer your services.
+Safety protocols clearly indicate that new pages for the safety manuals must be printed in a very specific order. The notation X|Y means that if both page number X and page number Y are to be produced as part of an update, page number X must be printed at some point before page number Y.
+The Elf has for you both the page ordering rules and the pages to produce in each update (your puzzle input), but can't figure out whether each update has the pages in the right order.
+For example:
+47|53
+97|13
+97|61
+97|47
+75|29
+61|13
+75|53
+29|13
+97|29
+53|29
+61|53
+97|53
+61|29
+47|13
+75|47
+97|75
+47|61
+75|61
+47|29
+75|13
+53|13
+
+75,47,61,53,29
+97,61,53,29,13
+75,29,13
+75,97,47,61,53
+61,13,29
+97,13,75,29,47
+
+The first section specifies the page ordering rules, one per line. The first rule, 47|53, means that if an update includes both page number 47 and page number 53, then page number 47 must be printed at some point before page number 53. (47 doesn't necessarily need to be immediately before 53; other pages are allowed to be between them.)
+The second section specifies the page numbers of each update. Because most safety manuals are different, the pages needed in the updates are different too. The first update, 75,47,61,53,29, means that the update consists of page numbers 75, 47, 61, 53, and 29.
+To get the printers going as soon as possible, start by identifying which updates are already in the right order.
+In the above example, the first update (75,47,61,53,29) is in the right order:
+
+75 is correctly first because there are rules that put each other page after it: 75|47, 75|61, 75|53, and 75|29.
+47 is correctly second because 75 must be before it (75|47) and every other page must be after it according to 47|61, 47|53, and 47|29.
+61 is correctly in the middle because 75 and 47 are before it (75|61 and 47|61) and 53 and 29 are after it (61|53 and 61|29).
+53 is correctly fourth because it is before page number 29 (53|29).
+29 is the only page left and so is correctly last.
+
+Because the first update does not include some page numbers, the ordering rules involving those missing page numbers are ignored.
+The second and third updates are also in the correct order according to the rules. Like the first update, they also do not include every page number, and so only some of the ordering rules apply - within each update, the ordering rules that involve missing page numbers are not used.
+The fourth update, 75,97,47,61,53, is not in the correct order: it would print 75 before 97, which violates the rule 97|75.
+The fifth update, 61,13,29, is also not in the correct order, since it breaks the rule 29|13.
+The last update, 97,13,75,29,47, is not in the correct order due to breaking several rules.
+For some reason, the Elves also need to know the middle page number of each update being printed. Because you are currently only printing the correctly-ordered updates, you will need to find the middle page number of each correctly-ordered update. In the above example, the correctly-ordered updates are:
+75,47,61,53,29
+97,61,53,29,13
+75,29,13
+
+These have middle page numbers of 61, 53, and 29 respectively. Adding these page numbers together gives 143.
+Of course, you'll need to be careful: the actual list of page ordering rules is bigger and more complicated than the above example.
+Determine which updates are already in the correct order. What do you get if you add up the middle page number from those correctly-ordered updates?
+
+Your puzzle answer was 4774.--- Part Two ---While the Elves get to work printing the correctly-ordered updates, you have a little time to fix the rest of them.
+For each of the incorrectly-ordered updates, use the page ordering rules to put the page numbers in the right order. For the above example, here are the three incorrectly-ordered updates and their correct orderings:
+
+75,97,47,61,53 becomes 97,75,47,61,53.
+61,13,29 becomes 61,29,13.
+97,13,75,29,47 becomes 97,75,47,29,13.
+
+After taking only the incorrectly-ordered updates and ordering them correctly, their middle page numbers are 47, 29, and 47. Adding these together produces 123.
+Find the updates which are not in the correct order. What do you get if you add up the middle page numbers after correctly ordering just those updates?
+
+Your puzzle answer was 6004.Both parts of this puzzle are complete! They provide two gold stars: **
+At this point, you should return to your Advent calendar and try another puzzle.
+If you still want to see it, you can get your puzzle input.
+
+The input file is located in "in.txt" with the content as shown in the example. Bear in mind you will need to read it and parse it properly.
+```
+
+Here is the input file, or a part of it:
+```
+
+91|95
+64|54
+64|53
+62|96
+62|91
+62|35
+18|28
+18|78
+18|73
+18|95
+58|89
+58|32
+58|99
+58|66
+58|14
+78|69
+78|88
+78|58
+78|74
+78|79
+78|84
+75|11
+75|32
+75|28
+75|54
+75|62
+75|17
+75|35
+63|17
+63|75
+63|78
+63|79
+63|94
+63
+
+[... truncated due to length ...]
+
+5,92,35,11,29,21,14
+88,69,34,76,74,26,57,44,55,53,16,95,73
+99,14,17,56,32,93,79,47,35
+54,97,33,21,43,14,11,75,73,71,78,17,41
+62,78,11,88,69
+93,74,96,57,64,44,55,53,18,95,73,41,63
+54,29,79,91,99,92,93
+
+```
