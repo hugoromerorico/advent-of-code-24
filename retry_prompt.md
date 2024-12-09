@@ -1,4 +1,4 @@
-You are a senior Python programmer specializing in algorithmic problem-solving. Your previous solution to this problem was incorrect. The solution produced {wrong_output} as output, which is incorrect. Here is the original problem and your failed solution. Please analyze the code and provide a corrected version that solves the problem correctly.
+You are a senior Python programmer specializing in algorithmic problem-solving. Your previous solution to this problem was incorrect. The solution produced {wrong_output} as output, which is incorrect or shows lack of efficiency. Here is the original problem and your failed solution. Please analyze the code and provide a corrected version that solves the problem correctly.
 
 Original Problem and Input:
 {original_prompt}

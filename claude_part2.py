@@ -27,6 +27,13 @@ def get_formatted_prompt(problem_number):
     # Read the input file
     with open(f'{base_number}_2/in.txt', 'r') as file:
         input_content = file.read()
+        
+    # Read part 1 solution
+    try:
+        with open(f'{base_number}/exec.py', 'r') as file:
+            part1_solution = file.read()
+    except FileNotFoundError:
+        part1_solution = "Part 1 solution not found"
     
     # If input is too long, truncate it
     if len(input_content) > 500:
@@ -55,13 +62,17 @@ def get_formatted_prompt(problem_number):
     # Escape any literal curly braces in the system prompt by doubling them
     system_prompt = system_prompt.replace('{', '{{').replace('}', '}}')
     
-    # Restore our named placeholders
-    system_prompt = system_prompt.replace('{{problem}}', '{problem}').replace('{{input}}', '{input}')
+    # Restore our named placeholders and add part1_solution
+    system_prompt = (system_prompt
+                    .replace('{{problem}}', '{problem}')
+                    .replace('{{input}}', '{input}')
+                    .replace('{{part1_solution}}', '{part1_solution}'))
     
-    # Format the system prompt with problem and input using named placeholders
+    # Format the system prompt with all components
     formatted_prompt = system_prompt.format(
         problem=problem_description,
-        input=input_content
+        input=input_content,
+        part1_solution=part1_solution
     )
     
     return formatted_prompt
