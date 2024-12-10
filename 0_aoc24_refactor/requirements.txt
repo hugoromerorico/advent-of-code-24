@@ -1,0 +1,5 @@
+prefect
+anthropic
+python-dotenv
+requests
+beautifulsoup4
